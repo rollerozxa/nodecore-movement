@@ -82,6 +82,6 @@ minetest.register_globalstep(function(dtime)
 			data.speed[name] = speed
 			player:set_physics_override({ speed = speed })
 		end
-		minetest.log("SPD: "..data.speed[name].." | TIME: "..data.time)
+		--minetest.log("SPD: "..data.speed[name].." | TIME: "..data.time)
 	end
 end)
