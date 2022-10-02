@@ -20,15 +20,12 @@ end)
 local data = {
 	autoruntime = {},
 	speed = {},
+	sneaking = {},
 	time = 0
 }
 
 minetest.register_on_mods_loaded(function()
 	data.time = minetest.get_gametime()
-end)
-
-minetest.register_on_joinplayer(function(player)
-	player:set_properties({stepheight = 1.1})
 end)
 
 minetest.register_globalstep(function(dtime)
@@ -42,6 +39,19 @@ minetest.register_globalstep(function(dtime)
 		local ctl = player:get_player_control()
 		local name = player:get_player_name()
 
+		if ctl.sneak ~= data.sneaking[name] then
+			data.sneaking[name] = ctl.sneak
+
+			local stepheight
+			if ctl.sneak then
+				stepheight = 0.0001
+			else
+				stepheight = 1.1
+			end
+
+			player:set_properties({stepheight = stepheight})
+		end
+
 		local walking = ctl.up and not ctl.down
 		if (not walking) and ctl.jump and (not ctl.sneak) then
 			local ppos = player:get_pos()
@@ -53,6 +63,7 @@ minetest.register_globalstep(function(dtime)
 				walking = def and (def.climbable or def.liquidtype ~= "none")
 			end
 		end
+
 		if walking and ctl.sneak then
 			local pos = player:get_pos()
 			if not solid(pos) then
@@ -60,6 +71,7 @@ minetest.register_globalstep(function(dtime)
 				walking = not solid(pos)
 			end
 		end
+
 		local speed = autorun_walkspeed
 		local max = autorun_walkspeed * autorun_ratio
 		if walking and data.autoruntime[name] then
@@ -82,6 +94,7 @@ minetest.register_globalstep(function(dtime)
 			data.speed[name] = speed
 			player:set_physics_override({ speed = speed })
 		end
+
 		--minetest.log("SPD: "..data.speed[name].." | TIME: "..data.time)
 	end
 end)
