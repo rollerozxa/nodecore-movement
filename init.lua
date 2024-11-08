@@ -5,16 +5,16 @@ local autorun_acceltime = 4
 local autorun_ratio = 2
 
 local function solid(pos)
-	local node = minetest.get_node(pos)
-	local def = minetest.registered_items[node.name]
+	local node = core.get_node(pos)
+	local def = core.registered_items[node.name]
 	if not def then return true end
 	return def.liquidtype == "none" and def.walkable
 end
 
 local hurttime = {}
-minetest.register_on_player_hpchange(function(player, hp_change, reason)
-	if not minetest.settings:get("enable_damage") then return end
-	hurttime[player:get_player_name()] = minetest.get_gametime()
+core.register_on_player_hpchange(function(player, hp_change, reason)
+	if not core.settings:get("enable_damage") then return end
+	hurttime[player:get_player_name()] = core.get_gametime()
 end)
 
 local data = {
@@ -24,18 +24,18 @@ local data = {
 	time = 0
 }
 
-minetest.register_on_mods_loaded(function()
-	data.time = minetest.get_gametime()
+core.register_on_mods_loaded(function()
+	data.time = core.get_gametime()
 end)
 
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 	if data.time then
 		data.time = data.time + dtime
 	else
-		data.time = minetest.get_gametime()
+		data.time = core.get_gametime()
 	end
 
-	for _,player in pairs(minetest.get_connected_players()) do
+	for _,player in pairs(core.get_connected_players()) do
 		local ctl = player:get_player_control()
 		local name = player:get_player_name()
 
@@ -55,11 +55,11 @@ minetest.register_globalstep(function(dtime)
 		local walking = ctl.up and not ctl.down
 		if (not walking) and ctl.jump and (not ctl.sneak) then
 			local ppos = player:get_pos()
-			local def = minetest.registered_nodes[minetest.get_node(ppos).name]
+			local def = core.registered_nodes[core.get_node(ppos).name]
 			walking = def and (def.climbable or def.liquidtype ~= "none")
 			if not walking then
 				ppos.y = ppos.y + 1
-				def = minetest.registered_nodes[minetest.get_node(ppos).name]
+				def = core.registered_nodes[core.get_node(ppos).name]
 				walking = def and (def.climbable or def.liquidtype ~= "none")
 			end
 		end
@@ -95,6 +95,6 @@ minetest.register_globalstep(function(dtime)
 			player:set_physics_override({ speed = speed })
 		end
 
-		--minetest.log("SPD: "..data.speed[name].." | TIME: "..data.time)
+		--core.log("SPD: "..data.speed[name].." | TIME: "..data.time)
 	end
 end)
