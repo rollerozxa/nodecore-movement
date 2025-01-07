@@ -1,0 +1,22 @@
+{
+	"type": "MOD",
+	"title": "NodeCore Movement",
+	"name": "nodecore_movement",
+	"short_description": "NodeCore-esque movement for other games",
+	"dev_state": "ACTIVELY_DEVELOPED",
+	"tags": [
+		"survival",
+		"transport"
+	],
+	"content_warnings": [],
+	"license": "MIT",
+	"media_license": "MIT",
+	"long_description": "Luanti mod which ports over the movement in NodeCore (increased stepheight and running by building up speed) to other Luanti games, including Minetest Game.",
+	"repo": "https://github.com/rollerozxa/nodecore-movement",
+	"website": null,
+	"issue_tracker": "https://github.com/rollerozxa/nodecore-movement/issues/",
+	"forums": null,
+	"video_url": null,
+	"donate_url": null,
+	"translation_url": null
+}
