@@ -1,8 +1,8 @@
-
 local autorun_walkspeed = 1.25
 local autorun_walktime = 2
 local autorun_acceltime = 4
 local autorun_ratio = 2
+local monoid = minetest.get_modpath("player_monoids") ~= nil
 
 local function solid(pos)
 	local node = core.get_node(pos)
@@ -92,7 +92,11 @@ core.register_globalstep(function(dtime)
 		if oldspeed > speed or oldspeed < (speed - 0.05)
 		or (speed == max and oldspeed ~= max) then
 			data.speed[name] = speed
-			player:set_physics_override({ speed = speed })
+			if monoid then
+				player_monoids.speed:add_change(player, speed, "nodecore_movement")
+			else
+				player:set_physics_override({ speed = speed })
+			end
 		end
 
 		--core.log("SPD: "..data.speed[name].." | TIME: "..data.time)
